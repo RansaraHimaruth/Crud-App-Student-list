@@ -16,6 +16,16 @@ function Home() {
       });
   }, []);
 
+    const handleDelete = (id: number): void => {
+        axios.delete(`http://localhost:8081/delete/${id}`)
+        .then((response) => {
+            location.reload();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }
+
   return (
     <>
       <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
@@ -42,7 +52,7 @@ function Home() {
                   <td>
                     <Link to={`/read/${student.ID}`} className="btn btn-sm btn-info">Read</Link>
                     <Link to={`/edit/${student.ID}`} className="btn btn-sm btn-primary mx-2">Edit</Link>
-                    <button className="btn btn-sm btn-danger">Delete</button>
+                    <button onClick={() => handleDelete(student.ID)} className="btn btn-sm btn-danger">Delete</button>
                   </td>
                 </tr>
               ))}
