@@ -4,6 +4,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 
 const db = mysql.createConnection({
@@ -17,6 +18,33 @@ const db = mysql.createConnection({
 app.get('/', (req, res) => {
   const sql = 'SELECT * FROM student';
   db.query(sql, (err, result) => {
+    if(err) return res.json({Message: "Error inside the server"});
+    return res.json(result);
+  });
+});
+
+app.post('/student', (req, res) => {
+  const sql = 'INSERT INTO student (`Name`,`Email`) VALUES (?)';
+  const values = [req.body.name, req.body.email];
+  db.query(sql, [values], (err, result) => {
+    if(err) return res.json({Message: "Error inside the server"});
+    return res.json(result);
+  });
+});
+
+app.get('/read/:id', (req, res) => {
+  const sql = 'SELECT * FROM student WHERE ID = ?';
+  const id = req.params.id;
+  db.query(sql, [id], (err, result) => {
+    if(err) return res.json({Message: "Error inside the server"});
+    return res.json(result);
+  });
+});
+
+app.put('/update/:id', (req, res) => {
+  const sql = 'UPDATE student SET `Name` = ?, `Email` = ? WHERE ID = ?';
+  const id = req.params.id;
+  db.query(sql, [req.body.name, req.body.email,id], (err, result) => {
     if(err) return res.json({Message: "Error inside the server"});
     return res.json(result);
   });
